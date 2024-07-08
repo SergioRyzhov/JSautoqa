@@ -47,7 +47,7 @@ function matchDigitsAndPositions (firstNum, secondNum) {
         if (firstNum[i] === secondNum[i]) {
             digitAndPositionCounter += 1;
         };
-        if (secondNum.indexOf(firstNum[i]) !== -1) {
+        if (secondNum.indexOf(firstNum[i]) !== -1 && firstNum[i] !== secondNum[i]) {
             digitCounter += 1;
         };
     };
