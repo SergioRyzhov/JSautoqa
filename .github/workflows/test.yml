@@ -23,9 +23,12 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+      working-directory: ./lesson14
 
     - name: Run lint
       run: npm run lint
+      working-directory: ./lesson14
 
     - name: Run tests
       run: npm test
+      working-directory: ./lesson14
