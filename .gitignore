@@ -5,3 +5,6 @@ cache
 docker-compose.jenkins.local.yml
 lesson12/*.js
 coverage/
+screenshots/
+.env
+cypress.env.json
