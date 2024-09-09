@@ -1,36 +1,39 @@
 export class LoginPage {
-    visit() {
-      cy.visit('/login');
-      this.getStartEmailElement().click();
-    }
+  private loginUrl = '/login';
+  private startEmailButton = '.btn-provider-email';
+  private emailInput = '#email';
+  private passwordInput = '#password';
+  private submitButton = 'button[type="submit"]';
+  private projectCardButton = 'button.link-card';
 
-    verifyProjectCard() {
-        return cy.get('button.link-card');
-    }
+  visit() {
+    cy.visit(this.loginUrl);
+    cy.get(this.startEmailButton).click();
+  }
 
-    getStartEmailElement() {
-      return cy.contains('button', 'Log in with email');
-    }
-  
-    getEmailInput() {
-      return cy.get('#email');
-    }
-  
-    getPasswordInput() {
-      return cy.get('#password');
-    }
-  
-    getSubmitButton() {
-      return cy.get('button[type="submit"]');
-    }
-  
-    login(email: string, password: string) {
-      this.getEmailInput().type(email);
-      this.getPasswordInput().type(password);
-      this.getSubmitButton().click();
-    }
+  getEmailInput() {
+    return cy.get(this.emailInput);
+  }
 
-    choseProject() {
-      this.verifyProjectCard().click();
-    }
-  }  
+  getPasswordInput() {
+    return cy.get(this.passwordInput);
+  }
+
+  getStartEmailElement() {
+    return cy.get(this.startEmailButton);
+  }
+
+  verifyProjectCard() {
+    return cy.get(this.projectCardButton);
+  }
+
+  login(email: string, password: string) {
+    cy.get(this.emailInput).type(email);
+    cy.get(this.passwordInput).type(password);
+    cy.get(this.submitButton).click();
+  }
+
+  choseProject() {
+    this.verifyProjectCard().click();
+  }
+}

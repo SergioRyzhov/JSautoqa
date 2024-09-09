@@ -1,22 +1,14 @@
-export class ProfilePage { 
-    getUserDiv() {
-        return cy.get('div.user');
-    }
-    
+export class ProfilePage {
+    private userDiv = 'div.user';
+    private profileMenuButton = 'button.organization-switcher-button.undefined';
+    private logoutLink = 'a[href="/logout"]';
+  
     verifyLoggedInUser(expectedUsername: string) {
-        this.getUserDiv().should('contain', expectedUsername);
-    }
-
-    getProfileMenu() {
-        return cy.get('button.organization-switcher-button.undefined');
-    }
-
-    getLogoutButton() {
-        return cy.get('a[href="/logout"]');
+      cy.get(this.userDiv).should('contain', expectedUsername);
     }
   
     logout() {
-        this.getProfileMenu().click();
-        this.getLogoutButton().click();
+      cy.get(this.profileMenuButton).click();
+      cy.get(this.logoutLink).click();
     }
-}  
+  }  
