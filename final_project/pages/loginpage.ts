@@ -1,27 +1,38 @@
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 
 export class LoginPage {
-  private page: Page;
-  private usernameInput = 'input[name="username"]';
-  private passwordInput = 'input[name="password"]';
-  private loginButton = 'button[type="submit"]';
+  private emailInput = 'input#dwfrm_login_email';
+  private passwordInput = 'input#dwfrm_login_password';
+  private submitButton = 'button[data-tau="login_submit"]';
+  private accountTitle = 'h1.b-page_title';
+  private errorMessage = 'div[data-tau="login_error_message"]';
 
-  constructor(page: Page) {
-    this.page = page;
+  constructor(private page: Page) {}
+
+  async navigate() {
+    await this.page.goto('/login');
   }
 
-  async navigate(url: string) {
-    await this.page.goto(url);
+  async enterEmail(email: string) {
+    await this.page.fill(this.emailInput, email);
   }
 
-  async login(username: string, password: string) {
-    await this.page.waitForSelector(this.usernameInput);
-    await this.page.fill(this.usernameInput, username);
-
-    await this.page.waitForSelector(this.passwordInput);
+  async enterPassword(password: string) {
     await this.page.fill(this.passwordInput, password);
+  }
 
-    await this.page.waitForSelector(this.loginButton);
-    await this.page.click(this.loginButton);
+  async submit() {
+    await this.page.click(this.submitButton);
+  }
+
+  async assertLoginSuccess() {
+    const accountTitle = this.page.locator(this.accountTitle);
+    await expect(accountTitle).toBeVisible();
+    await expect(accountTitle).toContainText('Account'); 
+  }
+
+  async assertLoginFailure() {
+    const errorMessage = this.page.locator(this.errorMessage);
+    await expect(errorMessage).toBeVisible();
   }
 }
