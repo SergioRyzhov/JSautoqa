@@ -9,19 +9,10 @@ export class LoginPage {
 
   constructor(private page: Page) {}
 
-  async navigate() {
+  async getLogin(email: string, password: string) {
     await this.page.goto('/login');
-  }
-
-  async enterEmail(email: string) {
     await this.page.fill(this.emailInput, email);
-  }
-
-  async enterPassword(password: string) {
     await this.page.fill(this.passwordInput, password);
-  }
-
-  async submit() {
     await this.page.click(this.submitButton);
   }
 

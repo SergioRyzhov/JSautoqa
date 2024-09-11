@@ -7,22 +7,14 @@ test.describe('Login Test Suite', () => {
     const loginName = process.env.LOGIN_NAME || '';
     const loginPassword = process.env.LOGIN_PASSWORD || '';
 
-    await loginPage.navigate();
-    await loginPage.enterEmail(loginName);
-    await loginPage.enterPassword(loginPassword);
-    await loginPage.submit();
-    
+    await loginPage.getLogin(loginName, loginPassword);    
     await loginPage.assertLoginSuccess();
   });
 
   test('should fail to login with invalid credentials', async ({ page }) => {
     const loginPage = new LoginPage(page);
     
-    await loginPage.navigate();
-    await loginPage.enterEmail('invalid-email@example.com');
-    await loginPage.enterPassword('invalidPassword');
-    await loginPage.submit();
-    
+    await loginPage.getLogin('invalid-email@example.com', 'invalidPassword');    
     await loginPage.assertLoginFailure();
   });
 });
