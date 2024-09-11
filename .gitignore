@@ -5,3 +5,6 @@ cache
 docker-compose.jenkins.local.yml
 lesson12/*.js
 coverage/
+*.png
+playwright-report
+test-results
