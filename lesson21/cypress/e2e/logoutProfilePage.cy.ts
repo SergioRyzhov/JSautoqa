@@ -8,15 +8,11 @@ describe('Profile Page Tests', () => {
   const email: string = Cypress.env('email');
   const password: string = Cypress.env('password');
 
-  beforeEach(() => {
-    loginPage.visit();    
-  });
-
-
   it('should log out successfully', () => {
+    loginPage.visit();
     loginPage.login(email, password);
-    loginPage.choseProject();
+    loginPage.verifyProjectCard();
     profilePage.logout();
-    loginPage.getStartEmailElement().should('be.visible');
+    loginPage.verifyStartEmailElement();
   });
 });

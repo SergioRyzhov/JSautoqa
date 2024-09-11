@@ -15,18 +15,17 @@ describe('Login Page Tests', () => {
   });
 
   it('should have username and password inputs', () => {
-    loginPage.getEmailInput().should('be.visible');
-    loginPage.getPasswordInput().should('be.visible');
+    loginPage.getInputs();
   });
 
   it('should login with valid credentials', () => {
     loginPage.login(email, password);
-    loginPage.choseProject();
+    loginPage.verifyProjectCard();
     profilePage.verifyLoggedInUser(user);    
   });
 
   it('should fail login with invalid credentials', () => {
     loginPage.login('invaliduser@example.com', 'invalidpassword');
-    cy.get('.error-message').should('be.visible');
+    loginPage.verifyErrorMessage();
   });
 });

@@ -5,26 +5,25 @@ export class LoginPage {
   private passwordInput = '#password';
   private submitButton = 'button[type="submit"]';
   private projectCardButton = 'button.link-card';
+  private errrorMessage = '.error-message';
+  
 
   visit() {
     cy.visit(this.loginUrl);
     cy.get(this.startEmailButton).click();
   }
 
-  getEmailInput() {
-    return cy.get(this.emailInput);
+  getInputs() {
+    cy.get(this.emailInput).should('be.visible');
+    cy.get(this.passwordInput).should('be.visible');
   }
 
-  getPasswordInput() {
-    return cy.get(this.passwordInput);
-  }
-
-  getStartEmailElement() {
-    return cy.get(this.startEmailButton);
+  verifyStartEmailElement() {
+    cy.get(this.startEmailButton).should('be.visible');
   }
 
   verifyProjectCard() {
-    return cy.get(this.projectCardButton);
+    cy.get(this.projectCardButton).click();
   }
 
   login(email: string, password: string) {
@@ -33,7 +32,7 @@ export class LoginPage {
     cy.get(this.submitButton).click();
   }
 
-  choseProject() {
-    this.verifyProjectCard().click();
+  verifyErrorMessage(){
+    cy.get(this.errrorMessage).should('be.visible');
   }
 }
