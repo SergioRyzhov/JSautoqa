@@ -8,3 +8,6 @@ coverage/
 screenshots/
 .env
 cypress.env.json
+*.png
+playwright-report
+test-results
