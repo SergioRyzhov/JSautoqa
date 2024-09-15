@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { LoginPage } from '../pages/loginpage';
+import { LoginPage } from '../pages/LoginPage';
 
 test.describe('Login Test Suite', () => {
   test('should successfully login with valid credentials', async ({ page }) => {    
@@ -7,7 +7,7 @@ test.describe('Login Test Suite', () => {
     const loginName = process.env.LOGIN_NAME || '';
     const loginPassword = process.env.LOGIN_PASSWORD || '';
 
-    await loginPage.getLogin(loginName, loginPassword);    
+    await loginPage.getLogin(loginName, loginPassword);  
     await loginPage.assertLoginSuccess();
   });
 
