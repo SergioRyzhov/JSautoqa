@@ -4,7 +4,7 @@ export const locators = {
       passwordInput: 'input#dwfrm_login_password',
       submitButton: 'button[data-tau="login_submit"]',
       accountTitle: 'h1.b-page_title',
-      errorMessage: 'div[data-tau="login_error_message"',
+      errorMessage: 'div[data-tau="login_error_message"]',
     },
     basePage: {
       acceptCookieMainWindow: '#onetrust-banner-sdk',
@@ -13,5 +13,8 @@ export const locators = {
     },
     searchResultPage: {
       searchInputLocator: 'input#header-search-input',
+      searchHeader: 'div.b-header_search > h1 > a',
+      searchNoResultsMsg: 'div.b-header_search > p.b-header_search-noresult_msg',
+      searchResultCards: 'section.b-product_tile',
     },
   };

@@ -1,18 +1,38 @@
-import { Page } from '@playwright/test';
+import { BrowserContext, Page } from '@playwright/test';
 import { locators } from './locators';
+import { ContextSingleton } from './ContextSingleton';
 
 export class Base {
   protected page: Page;
+  protected context?: BrowserContext;
 
   constructor(page: Page) {
     this.page = page;
   }
 
-  async passAcceptCookieWindow() {
-    let acceptCookieExists = await this.page.locator(locators.basePage.acceptCookieMainWindow).isVisible();
-    while (acceptCookieExists) {
-        await this.page.locator(locators.basePage.acceptCookieButton).click();
-        acceptCookieExists = await this.page.locator(locators.basePage.acceptCookieMainWindow).isVisible();
+  async initContext() {
+    this.context = await ContextSingleton.getInstance();
+  }
+
+  async setCookie() {
+    await this.initContext();
+    const cookie = {
+      name: 'cookieConsent',
+      value: 'true',
+      domain: 'boohoo.com',
+      path: '/',
+      secure: true,
+      httpOnly: false,
+      sameSite: 'Lax' as 'Lax',
+    };
+    await this.context?.addCookies([cookie]);
+  }
+  
+  async closeCookiePopup() {
+    const acceptCookieMainWindow = this.page.locator(locators.basePage.acceptCookieMainWindow);
+    
+    if (await acceptCookieMainWindow.isVisible({ timeout: 2000 })) {
+      await this.page.locator(locators.basePage.acceptCookieButton).click();
     }
   }
 
@@ -25,9 +45,11 @@ export class Base {
     }
   }
 
-  async visit(path: string) {
+  async preparePage(path: string) {
+    await this.initContext();
+    await this.setCookie();
     await this.page.goto(path);
-    await this.passAcceptCookieWindow();
+    await this.closeCookiePopup();
     await this.handleCaptcha();
   }
 }

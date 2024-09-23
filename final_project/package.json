@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright test"
+    "test": "npx playwright test",
+    "test-login": "npx playwright test tests/login.test.ts",
+    "test-search": "npx playwright test tests/search.test.ts"
   },
   "keywords": [],
   "author": "",
