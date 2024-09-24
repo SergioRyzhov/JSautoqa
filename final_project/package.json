@@ -5,7 +5,9 @@
   "scripts": {
     "test": "npx playwright test",
     "test-login": "npx playwright test tests/login.test.ts",
-    "test-search": "npx playwright test tests/search.test.ts"
+    "test-search": "npx playwright test tests/search.test.ts",
+    "test-product": "npx playwright test tests/product-browsing.test.ts",
+    "test-cart": "npx playwright test tests/cart.test.ts"
   },
   "keywords": [],
   "author": "",

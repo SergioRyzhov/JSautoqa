@@ -10,12 +10,12 @@ export class SearchPage extends Base {
 
   async searchForItem(textItem: string) {
     await this.preparePage('/');
-    await this.page.fill(locators.searchResultPage.searchInputLocator, textItem);
-    await this.page.press(locators.searchResultPage.searchInputLocator, 'Enter');
+    await this.page.fill(locators.searchResultPage.searchInput, textItem);
+    await this.page.press(locators.searchResultPage.searchInput, 'Enter');
   }
 
   async assertSearchResults(textItem: string) {
-    await this.page.waitForURL(/.*\/search.*/, { timeout: 5000 });
+    await this.page.waitForURL(/.*\/search.*/);
     const searchResults = this.page.locator(locators.searchResultPage.searchHeader);
     await expect(searchResults).toHaveText(textItem);
     const searchResultCards = this.page.locator(locators.searchResultPage.searchResultCards);

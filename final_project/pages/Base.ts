@@ -8,6 +8,9 @@ export class Base {
 
   constructor(page: Page) {
     this.page = page;
+    this.page.on('framenavigated', async () => {
+      await this.closeCookiePopup();
+    });
   }
 
   async initContext() {
@@ -29,11 +32,13 @@ export class Base {
   }
   
   async closeCookiePopup() {
-    const acceptCookieMainWindow = this.page.locator(locators.basePage.acceptCookieMainWindow);
-    
-    if (await acceptCookieMainWindow.isVisible({ timeout: 2000 })) {
-      await this.page.locator(locators.basePage.acceptCookieButton).click();
-    }
+    try {
+      const acceptCookieMainWindow = this.page.locator(locators.basePage.acceptCookieMainWindow);
+          
+      if (await acceptCookieMainWindow.isVisible()) {
+          await this.page.locator(locators.basePage.acceptCookieButton).click();
+      }
+    } catch (error) {}    
   }
 
   async handleCaptcha() {
@@ -49,7 +54,6 @@ export class Base {
     await this.initContext();
     await this.setCookie();
     await this.page.goto(path);
-    await this.closeCookiePopup();
     await this.handleCaptcha();
   }
 }
