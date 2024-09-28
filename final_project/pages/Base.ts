@@ -1,6 +1,5 @@
 import { BrowserContext, Page } from '@playwright/test';
-import { locators } from './locators';
-import { ContextSingleton } from './ContextSingleton';
+import { locators } from '../data/locators';
 
 export class Base {
   protected page: Page;
@@ -10,50 +9,35 @@ export class Base {
     this.page = page;
     this.page.on('framenavigated', async () => {
       await this.closeCookiePopup();
+      await this.handleCaptcha();
     });
   }
 
-  async initContext() {
-    this.context = await ContextSingleton.getInstance();
-  }
-
-  async setCookie() {
-    await this.initContext();
-    const cookie = {
-      name: 'cookieConsent',
-      value: 'true',
-      domain: 'boohoo.com',
-      path: '/',
-      secure: true,
-      httpOnly: false,
-      sameSite: 'Lax' as 'Lax',
-    };
-    await this.context?.addCookies([cookie]);
-  }
-  
   async closeCookiePopup() {
     try {
       const acceptCookieMainWindow = this.page.locator(locators.basePage.acceptCookieMainWindow);
-          
+
       if (await acceptCookieMainWindow.isVisible()) {
-          await this.page.locator(locators.basePage.acceptCookieButton).click();
+        await this.page.locator(locators.basePage.acceptCookieButton).click();
       }
-    } catch (error) {}    
+    } catch (error) { }
   }
 
   async handleCaptcha() {
-    const captchaExists = await this.page.locator(locators.basePage.captchaFrameSelector).isVisible();
-    
-    if (captchaExists) {
-      console.log('CAPTCHA detected');
-      await this.page.pause();
+    try {
+      const captchaLocator = this.page.locator(locators.basePage.captchaFrameSelector);
+      const captchaExists = await captchaLocator.first().isVisible();
+
+      if (captchaExists) {
+        console.log('Captcha detected');
+        await this.page.pause();
+      }
+    } catch (error) {
+      // console.log('Error:', error);
     }
   }
 
-  async preparePage(path: string) {
-    await this.initContext();
-    await this.setCookie();
-    await this.page.goto(path);
-    await this.handleCaptcha();
+  async navigateToPage(url: string) {
+    await this.page.goto(url, { waitUntil: 'load' });
   }
 }

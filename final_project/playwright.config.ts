@@ -6,20 +6,20 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 const config: PlaywrightTestConfig = {
   testDir: './tests',
-  timeout: 30000,
+  timeout: 240000,
   expect: {
-    timeout: 3000,
+    timeout: 5000,
   },
+  // fullyParallel: true,
   use: {
-    viewport: { width: 1115, height: 1000 },
+    viewport: { width: 1280, height: 900 },
     baseURL: process.env.BASE_URL,
     browserName: 'chromium',
     headless: false,
-    screenshot: 'on',
-    trace: 'on',
-    launchOptions: {
-      args: ['--disable-popup-blocking']
-    },
+    screenshot: 'off',
+    trace: 'off',
+    ignoreHTTPSErrors: true,
+    bypassCSP: true,
   },
 };
 

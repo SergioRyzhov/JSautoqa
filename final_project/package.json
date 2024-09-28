@@ -6,8 +6,11 @@
     "test": "npx playwright test",
     "test-login": "npx playwright test tests/login.test.ts",
     "test-search": "npx playwright test tests/search.test.ts",
-    "test-product": "npx playwright test tests/product-browsing.test.ts",
-    "test-cart": "npx playwright test tests/cart.test.ts"
+    "test-product": "npx playwright test tests/product.test.ts",
+    "test-cart": "npx playwright test tests/cart.test.ts",
+    "test-profile": "npx playwright test tests/profile.test.ts",
+    "test-wishlist": "npx playwright test tests/wishlist.test.ts",
+    "test-logout": "npx playwright test tests/logout.test.ts"
   },
   "keywords": [],
   "author": "",

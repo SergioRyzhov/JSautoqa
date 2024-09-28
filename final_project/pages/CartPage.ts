@@ -1,35 +1,54 @@
 import { expect, Page } from '@playwright/test';
-import { locators } from './locators';
+import { locators } from '../data/locators';
 import { Base } from './Base';
+import { getCleanNumbers } from '../helpers/cleanNumbers';
+import { pageUrls } from '../data/pageurls';
+import { ProductPage } from './ProductPage';
+import { PageFactory } from '../patterns/PageFactory';
 
 export class CartPage extends Base {
-    constructor(page: Page) {
-        super(page);
-    }
+  private productPage = PageFactory.getPage(this.page, 'ProductPage') as ProductPage;
+
+  constructor(page: Page) {
+    super(page);
+  }
+
+  async addFirstProductToTheCart() {
+    await this.navigateToPage(pageUrls.productsPage);
+    await this.productPage.openTheFirstItemOfProducts();
+    await this.page.waitForSelector(locators.cartPage.firstSizeButton, { state: 'visible' });
+    await this.page.waitForSelector(locators.cartPage.addToCartButton, { state: 'visible' });
+    await this.page.click(locators.cartPage.firstSizeButton);
+    await this.page.click(locators.cartPage.addToCartButton);
+    await this.navigateToPage(pageUrls.cartPage);
+  }
+
+  async refreshTheCart() {
+    await this.page.reload({ waitUntil: 'load' });
+    await this.navigateToPage(pageUrls.cartPage);
+  }
 
   async getCartItemCount(): Promise<number> {
-    const count = await this.page.locator(locators.cart.cartItemCount).textContent();
+    const count = await this.page.locator('span.b-cart_product-qty_value').textContent();
     return Number(count);
   }
 
-  async verifyProductDetails(productName: string, expectedSize: string, expectedPrice: string) {
-    const productLocator = this.page.locator(locators.cart.productName(productName));
-    await expect(productLocator).toBeVisible();
-    const size = await this.page.locator(locators.cart.productSize(productName)).textContent();
-    const price = await this.page.locator(locators.cart.productPrice(productName)).textContent();
-    expect(size).toBe(expectedSize);
-    expect(price).toBe(expectedPrice);
+  async getCartTotalPrice(): Promise<number> {
+    const price = await this.page.locator('tr.b-summary_table-item.m-total > td').textContent();
+    const cleanedPrice = getCleanNumbers(price ?? '');
+    return cleanedPrice;
   }
 
-  async updateProductQuantity(productName: string, quantity: number) {
-    const quantityLocator = this.page.locator(locators.cart.quantityInput(productName));
-    await quantityLocator.fill(quantity.toString());
-    await this.page.keyboard.press('Enter');
+  async updateProductQuantity(quantity: number) {
+    await this.page.click(locators.cartPage.cartProductEditButton);
+    await this.page.selectOption(locators.cartPage.cartProductQtySelector, { index: quantity - 1 });
+    await this.page.click(locators.cartPage.cartProductUpdateButton);
   }
 
-  async removeProduct(productName: string) {
-    const removeButton = this.page.locator(locators.cart.removeButton(productName));
+  async removeProduct() {
+    const removeButton = this.page.locator('tr[data-tau="cart_product_item"] > .l-cart_product-remove > button').first();
     await removeButton.click();
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async applyDiscountCode(code: string) {
@@ -38,12 +57,16 @@ export class CartPage extends Base {
   }
 
   async verifyCartEmpty() {
-    const emptyMessage = await this.page.locator(locators.cart.emptyCartMessage).textContent();
-    expect(emptyMessage).toContain('Your cart is empty');
+    const emptyMessage = await this.page.locator('h2.b-cart_empty-title').textContent();
+    expect(emptyMessage).toContain('Your cart is currently empty');
   }
 
   async verifyTotalPrice(expectedTotal: string) {
     const total = await this.page.locator(locators.cart.totalPrice).textContent();
     expect(total).toBe(expectedTotal);
+  }
+
+  async waitForElement() {
+    await this.page.isVisible('span[data-tau="header_minicart_icon_qty"]');
   }
 }

@@ -1,65 +1,79 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 import { CartPage } from '../pages/CartPage';
 import { ProductPage } from '../pages/ProductPage';
-import { PageFactory } from '../pages/PageFactory';
+import { PageFactory } from '../patterns/PageFactory';
+import { BrowserSingleton } from '../patterns/BrowserSingleton';
+import { pageUrls } from '../data/pageurls';
 
-test('should add a product to the cart', async ({ page }) => {
-    const cartPage = PageFactory.getPage(page, 'CartPage') as CartPage;
-    const productPage = PageFactory.getPage(page, 'ProductPage') as ProductPage;
-  
-    // Select product size and add to cart
-    await productPage.selectSize('M');
-    await productPage.addToCart();
-  
-    // Verify the product has been added to the cart
-    expect(await cartPage.getCartItemCount()).toBeGreaterThan(0);
-    await cartPage.verifyProductDetails('Product Name', 'M', '$50');
+test.afterAll(async () => {
+  const browserSingleton = await BrowserSingleton.getInstance();
+  await browserSingleton.close();
 });
 
-// test('should persist the cart after page refresh', async ({ page }) => {
-//     const cartPage = new CartPage(page);
-  
-//     // Refresh the page
-//     await page.reload();
-  
-//     // Verify the cart is still populated
-//     expect(await cartPage.getCartItemCount()).toBeGreaterThan(0);
-// });
+test.describe('Cart Test Suite', () => {
+  let cartPage: CartPage;
+  let page: Page;
 
-// test('should update the product quantity in the cart', async ({ page }) => {
-//     const cartPage = new CartPage(page);
-  
-//     // Update the product quantity
-//     await cartPage.updateProductQuantity('Product Name', 2);
-  
-//     // Verify that the quantity has been updated
-//     const quantity = await cartPage.getCartItemCount();
-//     expect(quantity).toBe(2);
-//   });
+  test.beforeEach(async () => {
+    const browserSingleton = await BrowserSingleton.getInstance();
+    page = await browserSingleton.getPage();
 
-// test('should remove a product from the cart', async ({ page }) => {
-//     const cartPage = new CartPage(page);
+    cartPage = PageFactory.getPage(page, 'CartPage') as CartPage;
+  });
 
-//     // Remove the product from the cart
-//     await cartPage.removeProduct('Product Name');
+  test('should add a product to the cart', async () => {
+    await cartPage.addFirstProductToTheCart();
+    await expect(await cartPage.getCartItemCount()).toBeGreaterThan(0);
+  });
 
-//     // Verify the cart is empty after removal
-//     await cartPage.verifyCartEmpty();
-// });
+  test('should persist the cart after page refresh', async () => {
+    await cartPage.refreshTheCart();
+    await expect(await cartPage.getCartItemCount()).toBeGreaterThan(0);
+  });
 
-// test('should persist the cart between sessions', async ({ page, context }) => {
-//     const cartPage = new CartPage(page);
-  
-//     // Add a product to the cart
-//     await cartPage.getCartItemCount();
-    
-//     // Close the browser and reopen
-//     await context.storageState({ path: 'state.json' });
-//     const newContext = await browser.newContext({ storageState: 'state.json' });
-//     const newPage = await newContext.newPage();
-//     const newCartPage = new CartPage(newPage);
-  
-//     // Verify the cart persists
-//     await newPage.goto('https://example.com/cart');
-//     expect(await newCartPage.getCartItemCount()).toBeGreaterThan(0);
-// });
+  test('should update the product quantity in the cart', async () => {
+    const productPage = PageFactory.getPage(page, 'ProductPage') as ProductPage;
+
+    await productPage.navigateToPage('/cart');
+    await cartPage.updateProductQuantity(2);
+
+    await productPage.navigateToPage('/cart');
+    expect(await cartPage.getCartItemCount()).toBe(2);
+  });
+
+  test('should correctly calculate total price in the cart', async () => {
+    const productPage = PageFactory.getPage(page, 'ProductPage') as ProductPage;
+
+    await productPage.navigateToPage('/cart');
+    const oldPrice = await cartPage.getCartTotalPrice();
+
+    await cartPage.updateProductQuantity(3);
+
+    const newPriceHandle = await page.waitForFunction(
+      (oldPrice) => {
+        const newPriceElement = document.querySelector('tr.b-summary_table-item.m-total > td');
+        if (!newPriceElement) return false;
+
+        const newPriceText = newPriceElement.textContent?.trim() || '';
+        const cleanedNewPrice = parseFloat(newPriceText.replace(/[^\d.]/g, ''));
+
+        return cleanedNewPrice > oldPrice ? cleanedNewPrice : null;
+      },
+      oldPrice,
+      { timeout: 5000 }
+    );
+    const newPrice = await newPriceHandle.jsonValue();
+    if (newPrice === null) {
+      throw new Error('New price is null(');
+    }
+
+    await expect(newPrice).toBeGreaterThan(oldPrice);
+
+  });
+
+  test('should remove a product from the cart', async () => {
+    await cartPage.removeProduct();
+    await cartPage.verifyCartEmpty();
+  });
+
+})
