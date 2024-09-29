@@ -35,6 +35,10 @@ export const locators = {
     cartProductEditButton: 'button.b-cart_product-edit.b-button.m-link',
     cartProductQtySelector: 'div.b-product_update-attribute.m-overflowed select',
     cartProductUpdateButton: 'button.b-product_update-button_update.b-button.m-small.m-secondary',
+    cartTotalPrice: 'tr.b-summary_table-item.m-total > td',
+    rmProductFromTheCartButton: 'tr[data-tau="cart_product_item"] > .l-cart_product-remove > button',
+    cartEmptyMessage: 'h2.b-cart_empty-title',
+    cartItemCountSmall: 'span.b-cart_product-qty_value',
   },
   logoutPage: {
     logoutButton: 'a.b-account-signout',
@@ -45,5 +49,16 @@ export const locators = {
     inputField: (name: string) => `//form[@class="b-form m-account"]//label[contains(text(), "${name}")]/following-sibling::input`,
     updateButton: 'button.b-button.m-width_full.m-small',
     userNameHeader: 'span.b-header_login-user_name',
+  },
+  wishlistPage: {
+    smallIconCount: 'span[data-ref="wishlistCount"]',
+    productsCountInTheWishlist: 'div.b-wishlist-inner section.b-product_tile.b-wishlist_tile',
+    removeButtonsOfProductsInTheWishlist: 'div.b-wishlist-inner section.b-product_tile.b-wishlist_tile a[data-ref="remove"]',
+    addToWishlistButtons: 'div#product-grid [data-id="addToWishlist"]',
+    wishQuantitySmallIcon: 'span[data-ref="wishlistCount"]',
+    wishlistEmptyMessage: 'p.b-wishlist-empty_text',
+    addChosenProductToWishlist: 'button.b-button.m-outline.b-product_wishlist-button.b-wishlist_button',
+    duplicateErrorMessageToAdd: 'div[data-id="addToWishlistMsg"]:not([hidden])',
+    loginPromptMessage: 'p[aria-label="Check order status"]',
   }
 };

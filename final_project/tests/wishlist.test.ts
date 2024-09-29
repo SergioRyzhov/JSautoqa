@@ -1,131 +1,90 @@
-import { expect, test } from '@playwright/test';
+import { expect, Page, test } from '@playwright/test';
 import { ProductPage } from '../pages/ProductPage';
 import { WishlistPage } from '../pages/WishlistPage';
 import { PageFactory } from '../patterns/PageFactory';
 import { BrowserSingleton } from '../patterns/BrowserSingleton';
 import { LoginPage } from '../pages/LoginPage';
-import { getCleanNumbers } from '../helpers/cleanNumbers';
 import { LogoutPage } from '../pages/LogoutPage';
+import { loginCredentials } from '../data/creds';
+import { keyWords } from '../data/keywords';
 
 test.afterAll(async () => {
     const browserSingleton = await BrowserSingleton.getInstance();
     await browserSingleton.clearCacheAndCookies();
     await browserSingleton.close();
-  });
-
-test('should allow user to add a product to the wishlist', async () => {
-    const browserSingleton = await BrowserSingleton.getInstance();
-    const page = await browserSingleton.getPage();
-  
-    const loginPage = PageFactory.getPage(page, 'LoginPage') as LoginPage;
-    const productPage = PageFactory.getPage(page, 'ProductPage') as ProductPage;
-    const wishlistPage = PageFactory.getPage(page, 'WishlistPage') as WishlistPage;
-
-
-    const loginName = process.env.LOGIN_NAME || '';
-    const loginPassword = process.env.LOGIN_PASSWORD || '';
-    await loginPage.login(loginName, loginPassword, true);
-
-    await productPage.navigateToCategory('women');
-    await productPage.openTheFirstItemOfProducts();
-    await wishlistPage.addChoosenProductToWishlist();
-    // await productPage.addProductsToWishlist(1);
-
-    const countOfProducts = await page.locator('span[data-ref="wishlistCount"]').textContent();
-    expect(getCleanNumbers(countOfProducts!)).toBeGreaterThan(0);
 });
 
-test('should display the added product in the wishlist', async () => {
-    const browserSingleton = await BrowserSingleton.getInstance();
-    const page = await browserSingleton.getPage();
-  
-    const wishlistPage = PageFactory.getPage(page, 'WishlistPage') as WishlistPage;
+test.describe('Wishlist Test Suite as a user', () => {
+    let wishlistPage: WishlistPage;
+    let page: Page;
 
-    await wishlistPage.navigateToPage('/wishlist');
-    const productsInWishlist = await wishlistPage.isProductInWishlist();
-    expect(productsInWishlist).toBeTruthy();
-});
+    test.beforeEach(async () => {
+        const browserSingleton = await BrowserSingleton.getInstance();
+        page = await browserSingleton.getPage();
 
-test('should allow user to remove a product from the wishlist', async () => {
-    const browserSingleton = await BrowserSingleton.getInstance();
-    const page = await browserSingleton.getPage();
+        wishlistPage = PageFactory.getPage(page, 'WishlistPage') as WishlistPage;
+    });
 
-    const wishlistPage = PageFactory.getPage(page, 'WishlistPage') as WishlistPage;
+    test('should allow user to add a product to the wishlist', async () => {
+        const loginPage = PageFactory.getPage(page, 'LoginPage') as LoginPage;
 
-    await wishlistPage.navigateToPage('/wishlist');
-    await wishlistPage.removeProductsFromWishlist();
-    const productsInWishlist = await wishlistPage.isProductInWishlist();
-    expect(productsInWishlist).toBeFalsy();
-});
+        await loginPage.login(loginCredentials.valid.login!, loginCredentials.valid.pass!, true);
 
-test('should allow user to add multiple products to the wishlist', async () => {
-    const browserSingleton = await BrowserSingleton.getInstance();
-    const page = await browserSingleton.getPage();
-  
-    const productPage = PageFactory.getPage(page, 'ProductPage') as ProductPage;
-    const wishlistPage = PageFactory.getPage(page, 'WishlistPage') as WishlistPage;
+        await wishlistPage.addTheFirstProductToTheWishlist();
+        const countItems = await wishlistPage.getProductsCountFromTheSmallIcon();
+        await expect(countItems).toBeGreaterThan(0);
+    });
 
-    await productPage.navigateToCategory('women');
-    await productPage.addProductsToWishlist(6);
+    test('should display the added product in the wishlist', async () => {
+        const productsInWishlist = await wishlistPage.isProductsInTheWishlist();
+        await expect(productsInWishlist).toBeTruthy();
+    });
 
-    const countOfProducts = await page.locator('span[data-ref="wishlistCount"]').textContent();
-    expect(getCleanNumbers(countOfProducts!)).toBeGreaterThan(3);
-    await wishlistPage.navigateToPage('/wishlist');
-    await wishlistPage.removeProductsFromWishlist();
-});
+    test('should allow user to remove a product from the wishlist', async () => {
+        await wishlistPage.removeProductsFromWishlist();
+        const productsInWishlist = await wishlistPage.isProductsInTheWishlist();
+        await expect(productsInWishlist).toBeFalsy();
+    });
 
-test('should not allow duplicate products in the wishlist', async () => {
-    const browserSingleton = await BrowserSingleton.getInstance();
-    const page = await browserSingleton.getPage();
-  
-    const productPage = PageFactory.getPage(page, 'ProductPage') as ProductPage;
-    const wishlistPage = PageFactory.getPage(page, 'WishlistPage') as WishlistPage;
+    test('should allow user to add multiple products to the wishlist', async () => {
+        await wishlistPage.addProductsToWishlistFast(6);
+        const countOfProducts =  await wishlistPage.getProductsCountFromTheSmallIcon();
+        await expect(countOfProducts).toBeGreaterThan(3);        
+        await wishlistPage.removeProductsFromWishlist();
+    });
 
-    await productPage.navigateToCategory('women');
-    await productPage.addProductsToWishlist(1);
-    await productPage.openTheFirstItemOfProducts();
-    await wishlistPage.addChoosenProductToWishlist();
-    await wishlistPage.checkDuplicateErrorMessage();
+    test('should not allow duplicate products in the wishlist', async () => {
+        const productPage = PageFactory.getPage(page, 'ProductPage') as ProductPage;
 
-    const countOfProducts = await page.locator('span[data-ref="wishlistCount"]').textContent();
-    expect(getCleanNumbers(countOfProducts!)).toBe(1);
-});
+        await wishlistPage.addProductsToWishlistFast(1);
+        await productPage.openTheFirstItemOfProducts();
+        await wishlistPage.addChoosenProductToWishlist();
+        await wishlistPage.checkDuplicateErrorMessage();
 
-test('should display an empty message when wishlist is empty', async () => {
-    const browserSingleton = await BrowserSingleton.getInstance();
-    const page = await browserSingleton.getPage();
+        const countOfProducts = await wishlistPage.getProductsCountFromTheSmallIcon();
+        expect(countOfProducts).toBe(1);
+    });
 
-    const wishlistPage = PageFactory.getPage(page, 'WishlistPage') as WishlistPage;
+    test('should display an empty message when wishlist is empty', async () => {
+        await wishlistPage.removeProductsFromWishlist();
 
-    await wishlistPage.navigateToPage('/wishlist');
-    await wishlistPage.removeProductsFromWishlist();
+        const emptyMessage = await wishlistPage.getEmptyWishlistMessage();
+        await expect(emptyMessage).toBe(keyWords.wishlistPage.emptyMessage);
+    });
 
-    // Проверить, что отображается сообщение о пустом списке
-    const emptyMessage = await wishlistPage.getEmptyWishlistMessage();
-    await expect(emptyMessage).toBe('You don\'t have any items saved for later (yet)');
-});
+    test('should prompt login when trying to add to wishlist without authentication', async () => {
+        const productPage = PageFactory.getPage(page, 'ProductPage') as ProductPage;
+        const logoutPage = PageFactory.getPage(page, 'LogoutPage') as LogoutPage;
 
-test('should prompt login when trying to add to wishlist without authentication', async () => {
-    const browserSingleton = await BrowserSingleton.getInstance();
-    const page = await browserSingleton.getPage();
-  
-    const productPage = PageFactory.getPage(page, 'ProductPage') as ProductPage;
-    const wishlistPage = PageFactory.getPage(page, 'WishlistPage') as WishlistPage;
-    const logoutPage = PageFactory.getPage(page, 'LogoutPage') as LogoutPage;
+        await logoutPage.logout();
 
-    await wishlistPage.navigateToPage('/myaccount');
-    await logoutPage.logout();
+        await productPage.openTheFirstItemOfProducts();
+        await wishlistPage.addChoosenProductToWishlist();
 
-    // Открыть страницу продукта
-    await productPage.navigateToCategory('women');
-    // await productPage.addProductsToWishlist(1);
-    await productPage.openTheFirstItemOfProducts();
-    await wishlistPage.addChoosenProductToWishlist();
-
-    // Проверяем, что появляется запрос на авторизацию
-    await wishlistPage.navigateToPage('/wishlist');
-    const loginPrompt = await page.locator('p[aria-label="Check order status"]').textContent();
-    await expect(loginPrompt).toContain('These products are only available on this device and will expire after 7 days.');
-    await expect(loginPrompt).toContain('Sign in');
-    await expect(loginPrompt).toContain('Create account');
-});
+        await wishlistPage.checkIfPromptToLoginAppears([
+            keyWords.wishlistPage.loginPromptMessagePart1,
+            keyWords.wishlistPage.loginPromptMessagePart2,
+            keyWords.wishlistPage.loginPromptMessagePart3
+        ]);
+    });
+})

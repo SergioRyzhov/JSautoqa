@@ -24,5 +24,14 @@ export const keyWords = {
         invalid: {
             searchText: 'invalid-query',
         },
+    },
+    cartPage: {
+        emptyMessage: 'Your cart is currently empty',
+    },
+    wishlistPage: {
+        emptyMessage: 'You don\'t have any items saved for later (yet)',
+        loginPromptMessagePart1: 'These products are only available on this device and will expire after 7 days.',
+        loginPromptMessagePart2: 'Sign in',
+        loginPromptMessagePart3: 'Create account',
     }
 }

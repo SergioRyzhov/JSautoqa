@@ -29,11 +29,9 @@ export class Base {
       const captchaExists = await captchaLocator.first().isVisible();
 
       if (captchaExists) {
-        console.log('Captcha detected');
         await this.page.pause();
       }
     } catch (error) {
-      // console.log('Error:', error);
     }
   }
 

@@ -10,6 +10,7 @@ export class LogoutPage extends Base {
   }
 
   async logout() {
+    await this.navigateToPage(pageUrls.accountPage);
     const logoutButton = await this.page.locator(locators.logoutPage.logoutButton);
     await logoutButton.click();
     await this.page.waitForLoadState('load');

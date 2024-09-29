@@ -1,16 +1,14 @@
 import { test, expect, Page } from '@playwright/test';
 import { CartPage } from '../pages/CartPage';
-import { ProductPage } from '../pages/ProductPage';
 import { PageFactory } from '../patterns/PageFactory';
 import { BrowserSingleton } from '../patterns/BrowserSingleton';
-import { pageUrls } from '../data/pageurls';
 
 test.afterAll(async () => {
   const browserSingleton = await BrowserSingleton.getInstance();
   await browserSingleton.close();
 });
 
-test.describe('Cart Test Suite', () => {
+test.describe('Cart Test Suite as a guest', () => {
   let cartPage: CartPage;
   let page: Page;
 
@@ -32,48 +30,17 @@ test.describe('Cart Test Suite', () => {
   });
 
   test('should update the product quantity in the cart', async () => {
-    const productPage = PageFactory.getPage(page, 'ProductPage') as ProductPage;
-
-    await productPage.navigateToPage('/cart');
-    await cartPage.updateProductQuantity(2);
-
-    await productPage.navigateToPage('/cart');
-    expect(await cartPage.getCartItemCount()).toBe(2);
+    await cartPage.updateProductQtyInTheCart(2);
+    await expect(await cartPage.getCartItemCount()).toBe(2);
   });
 
-  test('should correctly calculate total price in the cart', async () => {
-    const productPage = PageFactory.getPage(page, 'ProductPage') as ProductPage;
-
-    await productPage.navigateToPage('/cart');
-    const oldPrice = await cartPage.getCartTotalPrice();
-
-    await cartPage.updateProductQuantity(3);
-
-    const newPriceHandle = await page.waitForFunction(
-      (oldPrice) => {
-        const newPriceElement = document.querySelector('tr.b-summary_table-item.m-total > td');
-        if (!newPriceElement) return false;
-
-        const newPriceText = newPriceElement.textContent?.trim() || '';
-        const cleanedNewPrice = parseFloat(newPriceText.replace(/[^\d.]/g, ''));
-
-        return cleanedNewPrice > oldPrice ? cleanedNewPrice : null;
-      },
-      oldPrice,
-      { timeout: 5000 }
-    );
-    const newPrice = await newPriceHandle.jsonValue();
-    if (newPrice === null) {
-      throw new Error('New price is null(');
-    }
-
+  test('should correctly add total price in the cart', async () => {
+    const { oldPrice, newPrice } = await cartPage.getNewTotalPriceInTheCart();
     await expect(newPrice).toBeGreaterThan(oldPrice);
-
   });
 
   test('should remove a product from the cart', async () => {
-    await cartPage.removeProduct();
+    await cartPage.removeProductFromTheCart();
     await cartPage.verifyCartEmpty();
   });
-
 })

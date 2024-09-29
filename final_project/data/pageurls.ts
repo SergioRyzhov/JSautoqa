@@ -6,4 +6,5 @@ export const pageUrls = {
     profileEditPage: '/account-edit',
     searchPageResult: '/search',
     cartPage: '/cart',
+    wishlistPage: '/wishlist',
 }
