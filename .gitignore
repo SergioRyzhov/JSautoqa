@@ -10,4 +10,4 @@ allure-results/
 allure-report/
 playwright-report/
 reports/
-.env
+**/.env
