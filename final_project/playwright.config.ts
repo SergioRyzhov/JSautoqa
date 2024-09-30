@@ -9,7 +9,7 @@ const config: PlaywrightTestConfig = {
     ['html', { outputFolder: 'playwright-report' }],
     ['allure-playwright'],
   ],
-  workers: 1,
+  workers: 7,
   testDir: './tests',
   timeout: 240000,
   expect: {
