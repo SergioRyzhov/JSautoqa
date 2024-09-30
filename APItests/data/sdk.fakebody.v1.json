@@ -1,0 +1,43 @@
+{
+    "sdk": "js-client",
+    "sdk_version": "v3.27.0",
+    "sdk_snippet_version": "v2.1.0",
+    "commands": [
+        {
+            "name": "crm/customers",
+            "data": {
+                "ids": {
+                    "cookie": "6f6837b3-5a82-43b5-b47e-af6e625c8c42"
+                },
+                "company_id": "bae6c690-92e1-11eb-b702-f6c634eb685d",
+                "properties": {
+                    "fbp": "fb.1.1727678106207.598164537604691200"
+                }
+            }
+        },
+        {
+            "name": "crm/customers",
+            "data": {
+                "ids": {
+                    "cookie": "6f6837b3-5a82-43b5-b47e-af6e625c8c42"
+                },
+                "company_id": "bae6c690-92e1-11eb-b702-f6c634eb685d",
+                "properties": {
+                    "user_agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:130.0) Gecko/20100101 Firefox/130.0"
+                }
+            }
+        },
+        {
+            "name": "crm/customers",
+            "data": {
+                "ids": {
+                    "cookie": "6f6837b3-5a82-43b5-b47e-af6e625c8c42"
+                },
+                "company_id": "bae6c690-92e1-11eb-b702-f6c634eb685d",
+                "properties": {
+                    "scid": "WnJJwFZgi_f0_1X-XSczAHGHBUqkQZXp"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "results": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": ["ok"]
+            }
+          },
+          "required": ["status"]
+        }
+      },
+      "start_time": {
+        "type": "number"
+      },
+      "end_time": {
+        "type": "number"
+      },
+      "success": {
+        "type": "boolean"
+      }
+    },
+    "required": ["results", "start_time", "end_time", "success"]
+  }  
