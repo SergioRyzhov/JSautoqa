@@ -10,7 +10,8 @@
     "test-cart": "npx playwright test tests/cart.test.ts",
     "test-profile": "npx playwright test tests/profile.test.ts",
     "test-wishlist": "npx playwright test tests/wishlist.test.ts",
-    "test-logout": "npx playwright test tests/logout.test.ts"
+    "test-logout": "npx playwright test tests/logout.test.ts",
+    "test-cart-profile": "npx playwright test tests/cart.test.ts && npx playwright test tests/profile.test.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
   "dependencies": {
     "@playwright/test": "^1.46.1",
     "@types/node": "^22.5.2",
+    "allure-playwright": "^3.0.3",
     "dotenv": "^16.4.5",
     "playwright": "^1.46.1",
     "ts-node": "^10.9.2",

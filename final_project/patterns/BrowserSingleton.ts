@@ -20,17 +20,11 @@ export class BrowserSingleton {
     this.page = await this.context.newPage();
   }
 
-  public getPage(): Page {
+  public async getPage(): Promise<Page> {
+    if (!this.page) {
+      this.page = await this.context.newPage();
+    }
     return this.page;
-  }
-
-  public async clearCacheAndCookies() {
-    await this.context.clearCookies();
-    await this.context.clearPermissions();
-    await this.page.evaluate(() => {
-      localStorage.clear();
-      sessionStorage.clear();
-    });
   }
 
   public async close() {

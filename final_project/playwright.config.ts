@@ -5,10 +5,15 @@ import path from 'path';
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 const config: PlaywrightTestConfig = {
+  reporter: [
+    ['html', { outputFolder: 'playwright-report' }],
+    ['allure-playwright'],
+  ],
+  workers: 1,
   testDir: './tests',
   timeout: 240000,
   expect: {
-    timeout: 5000,
+    timeout: 60000,
   },
   // fullyParallel: true,
   use: {

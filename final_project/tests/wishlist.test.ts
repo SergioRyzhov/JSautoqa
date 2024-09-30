@@ -8,9 +8,10 @@ import { LogoutPage } from '../pages/LogoutPage';
 import { loginCredentials } from '../data/creds';
 import { keyWords } from '../data/keywords';
 
+let page: Page;
+
 test.afterAll(async () => {
     const browserSingleton = await BrowserSingleton.getInstance();
-    await browserSingleton.clearCacheAndCookies();
     await browserSingleton.close();
 });
 
@@ -21,7 +22,6 @@ test.describe('Wishlist Test Suite as a user', () => {
     test.beforeEach(async () => {
         const browserSingleton = await BrowserSingleton.getInstance();
         page = await browserSingleton.getPage();
-
         wishlistPage = PageFactory.getPage(page, 'WishlistPage') as WishlistPage;
     });
 
@@ -48,8 +48,8 @@ test.describe('Wishlist Test Suite as a user', () => {
 
     test('should allow user to add multiple products to the wishlist', async () => {
         await wishlistPage.addProductsToWishlistFast(6);
-        const countOfProducts =  await wishlistPage.getProductsCountFromTheSmallIcon();
-        await expect(countOfProducts).toBeGreaterThan(3);        
+        const countOfProducts = await wishlistPage.getProductsCountFromTheSmallIcon();
+        await expect(countOfProducts).toBeGreaterThan(3);
         await wishlistPage.removeProductsFromWishlist();
     });
 

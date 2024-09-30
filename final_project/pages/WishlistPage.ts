@@ -3,10 +3,11 @@ import { Base } from './Base';
 import { pageUrls } from '../data/pageurls';
 import { ProductPage } from './ProductPage';
 import { PageFactory } from '../patterns/PageFactory';
-import { getCleanNumbers } from '../helpers/cleanNumbers';
+import { getCleanPrice } from '../helpers/cleanPrice';
 import { locators } from '../data/locators';
 import { removeProductFromPage } from '../helpers/removeProductFromPage';
-import { domSelectors } from '../data/selectors';
+import { addProductToWishlist } from '../helpers/addMultiProductsToWishlist';
+import { waitForPageLoadAndElVisible } from '../waiters/waiterBeforeEls';
 
 export class WishlistPage extends Base {
     private productPage = PageFactory.getPage(this.page, 'ProductPage') as ProductPage;
@@ -28,9 +29,9 @@ export class WishlistPage extends Base {
     }
 
     async getProductsCountFromTheSmallIcon(): Promise<Number> {
-        await this.page.waitForSelector(locators.wishlistPage.smallIconCount, { state: 'visible' });
+        await waitForPageLoadAndElVisible(this.page, locators.wishlistPage.smallIconCount);
         const countOfProducts = await this.page.locator(locators.wishlistPage.smallIconCount).textContent();
-        const cleanedCount = getCleanNumbers(countOfProducts!); 
+        const cleanedCount = getCleanPrice(countOfProducts!); 
         return cleanedCount;
     }
 
@@ -53,23 +54,10 @@ export class WishlistPage extends Base {
 
         if (n <= buttonsCount) {
             for (let i = 0; i < n; i++) {
+                await this.page.waitForLoadState('load');
                 const oldWishQty = await this.page.locator(locators.wishlistPage.wishQuantitySmallIcon).textContent();
                 const oldWishQtyCleaned = parseInt(oldWishQty!.replace(/\D/g, ''), 10);
-                const ariaPressed = await addToWishlistButtons.nth(i).getAttribute('aria-pressed');
-                if (ariaPressed === 'false') {
-                    await addToWishlistButtons.nth(i).click();
-                    await this.page.waitForFunction(
-                        ({ oldQty, domSelectors }) => {
-                            const el = document.querySelector(domSelectors.wishlistPage.wishlistQuantitySmallIcon);
-                            if (!el || !el.textContent) {
-                                return false;
-                            }
-                            const newWishQtyCleaned = parseInt(el.textContent.replace(/\D/g, ''), 10);
-                            return newWishQtyCleaned !== oldQty;
-                        },
-                        { oldQty: oldWishQtyCleaned, domSelectors },
-                    );
-                }
+                await addProductToWishlist(this.page, addToWishlistButtons.nth(i), oldWishQtyCleaned);
             }
         }
     }
@@ -81,7 +69,7 @@ export class WishlistPage extends Base {
     }
 
     async addChoosenProductToWishlist() {
-        await this.page.waitForSelector(locators.wishlistPage.addChosenProductToWishlist, { state: 'visible' });
+        await waitForPageLoadAndElVisible(this.page, locators.wishlistPage.addChosenProductToWishlist);
         await this.page.click(locators.wishlistPage.addChosenProductToWishlist);
         await this.page.waitForLoadState('load');
     }

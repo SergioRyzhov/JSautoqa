@@ -1,7 +1,7 @@
 import { expect, Page } from '@playwright/test';
 import { locators } from '../data/locators';
 import { Base } from './Base';
-import { getCleanNumbers } from '../helpers/cleanNumbers';
+import { getCleanPrice } from '../helpers/cleanPrice';
 import { pageUrls } from '../data/pageurls';
 import { ProductPage } from './ProductPage';
 import { PageFactory } from '../patterns/PageFactory';
@@ -45,7 +45,7 @@ export class CartPage extends Base {
 
   async getCurrentTotalPriceInTheCart(): Promise<number> {
     const price = await this.page.locator(locators.cartPage.cartTotalPrice).textContent();
-    const cleanedPrice = getCleanNumbers(price ?? '');
+    const cleanedPrice = getCleanPrice(price ?? '');
     return cleanedPrice;
   }
 

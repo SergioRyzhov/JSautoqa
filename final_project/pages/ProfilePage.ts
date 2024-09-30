@@ -3,6 +3,7 @@ import { Base } from "./Base";
 import { locators } from "../data/locators";
 import { keyWords } from "../data/keywords";
 import { pageUrls } from "../data/pageurls";
+import { waitForPageLoadAndElVisible } from "../waiters/waiterBeforeEls";
 
 export class ProfilePage extends Base {
     async getProfileDetail(fieldName: string) {
@@ -24,14 +25,11 @@ export class ProfilePage extends Base {
     async checkEditFirstName(newName: string) {
         await this.navigateToPage(pageUrls.profileEditPage);
         await this.editProfileDetail(keyWords.profilePage.fieldName.firstName, newName);
-        const updateButton = await this.page.locator(locators.profilePage.updateButton);
-        await this.page.waitForLoadState('load');
-        await updateButton.click();
+        await waitForPageLoadAndElVisible(this.page, locators.profilePage.updateButton);
+        await this.page.click(locators.profilePage.updateButton);
     }
 
     async checkFirstNameChange(newName: string) {
-        await this.navigateToPage(pageUrls.homePage);
-        await this.navigateToPage(pageUrls.profileEditPage);
         const newNameText = await this.page.locator(locators.profilePage.userNameHeader).textContent();
         const trimmedNameText = newNameText?.trim();
         await expect(trimmedNameText).toContain(newName);

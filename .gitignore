@@ -6,3 +6,6 @@ docker-compose.jenkins.local.yml
 lesson12/*.js
 coverage/
 test-results/
+allure-results/
+allure-report/
+playwright-report/

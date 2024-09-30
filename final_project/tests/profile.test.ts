@@ -12,30 +12,29 @@ test.afterAll(async () => {
 });
 
 test.describe('Profile Test Suite', () => {
-  let profilePgae: ProfilePage;
+  let profilePage: ProfilePage;
   let page: Page;
 
   test.beforeEach(async () => {
     const browserSingleton = await BrowserSingleton.getInstance();
     page = await browserSingleton.getPage();
 
-    profilePgae = PageFactory.getPage(page, 'ProfilePage') as ProfilePage;
+    profilePage = PageFactory.getPage(page, 'ProfilePage') as ProfilePage;
   });
-
 
   test('should display user profile details', async () => {
     const loginPage = PageFactory.getPage(page, 'LoginPage') as LoginPage;
 
     await loginPage.login(loginCredentials.valid.login!, loginCredentials.valid.pass!, true);
 
-    await profilePgae.checkProfileDetails();
+    await profilePage.checkProfileDetails();
   });
 
   test('should allow user to edit profile details', async () => {
-    await profilePgae.checkEditFirstName(keyWords.profilePage.accountFakeData.firstName)
+    await profilePage.checkEditFirstName(keyWords.profilePage.accountFakeData.firstName);
   });
 
   test('should verify that profile changes were saved', async () => {
-    await profilePgae.checkFirstNameChange(keyWords.profilePage.accountFakeData.firstName);
+    await profilePage.checkFirstNameChange(keyWords.profilePage.accountFakeData.firstName);
   });
-})
+});

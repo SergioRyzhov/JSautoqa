@@ -2,6 +2,7 @@ import { expect, Page } from '@playwright/test';
 import { Base } from './Base';
 import { locators } from '../data/locators';
 import { pageUrls } from '../data/pageurls';
+import { waitForPageLoadAndElVisible } from '../waiters/waiterBeforeEls';
 
 export class ProductPage extends Base {
   constructor(page: Page) {
@@ -15,7 +16,7 @@ export class ProductPage extends Base {
 
   async openTheFirstItemOfProducts() {
     await this.navigateToPage(pageUrls.productsPage);
-    await this.page.waitForSelector(locators.productPage.productFirstItem, { state: 'visible' });
+    await waitForPageLoadAndElVisible(this.page, locators.productPage.productFirstItem);
     await this.page.click(locators.productPage.productFirstItem);
   }
 
