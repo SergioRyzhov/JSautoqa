@@ -1,7 +1,7 @@
 import { test, expect, Page } from '@playwright/test';
-import { CartPage } from '../pages/CartPage';
-import { PageFactory } from '../patterns/PageFactory';
-import { BrowserSingleton } from '../patterns/BrowserSingleton';
+import { CartPage } from '../pages';
+import { BrowserSingleton } from '../data/helpers/BrowserSingleton';
+import { PageFactory } from '../pages/PageFactory';
 
 test.afterAll(async () => {
   const browserSingleton = await BrowserSingleton.getInstance();
@@ -21,26 +21,26 @@ test.describe('Cart Test Suite as a guest', () => {
 
   test('should add a product to the cart', async () => {
     await cartPage.addFirstProductToTheCart();
-    await expect(await cartPage.getCartItemCount()).toBeGreaterThan(0);
+    await cartPage.assertCartItemCount(1);
   });
 
   test('should persist the cart after page refresh', async () => {
-    await cartPage.refreshTheCart();
-    await expect(await cartPage.getCartItemCount()).toBeGreaterThan(0);
+    await cartPage.refreshThePage();
+    await cartPage.assertCartItemCount(1);
   });
 
   test('should update the product quantity in the cart', async () => {
     await cartPage.updateProductQtyInTheCart(2);
-    await expect(await cartPage.getCartItemCount()).toBe(2);
+    await cartPage.assertCartItemCount(2);
   });
 
   test('should correctly add total price in the cart', async () => {
-    const { oldPrice, newPrice } = await cartPage.getNewTotalPriceInTheCart();
+    const { oldPrice, newPrice } = await cartPage.calculateUpdatedTotalPriceInCart(3);
     await expect(newPrice).toBeGreaterThan(oldPrice);
   });
 
   test('should remove a product from the cart', async () => {
     await cartPage.removeProductFromTheCart();
-    await cartPage.verifyCartEmpty();
+    await cartPage.assertCartEmpty();
   });
-})
+});

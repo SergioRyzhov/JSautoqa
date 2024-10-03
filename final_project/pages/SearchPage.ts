@@ -1,8 +1,8 @@
 import { Base } from './Base';
-import { locators } from '../data/locators';
+import { searchResultPage } from '../data/locators';
 import { expect, Page } from '@playwright/test';
-import { pageUrls } from '../data/pageurls';
-import { keyWords } from '../data/keywords';
+import { pageEndpoints } from '../data/endpoints';
+import { textData } from '../data/textData';
 
 export class SearchPage extends Base {
 
@@ -11,18 +11,18 @@ export class SearchPage extends Base {
   }
 
   async searchForItem(text: string) {
-    await this.navigateToPage(pageUrls.homePage);
-    await this.page.fill(locators.searchResultPage.searchInput, text);
-    await this.page.press(locators.searchResultPage.searchInput, 'Enter');
+    await this.navigateToPage(pageEndpoints.homePage);
+    await this.page.fill(searchResultPage.searchInput, text);
+    await this.page.press(searchResultPage.searchInput, 'Enter');
   }
 
   async assertSearchResults(text: string) {
-    await this.page.waitForURL(new RegExp(`.*${pageUrls.searchPageResult}`));
+    await this.page.waitForURL(new RegExp(`.*${pageEndpoints.searchPageResult}`));
 
-    const searchResults = await this.page.locator(locators.searchResultPage.searchHeader);
+    const searchResults = await this.page.locator(searchResultPage.searchHeader);
     await expect(searchResults).toHaveText(text);
 
-    const searchResultCards = await this.page.locator(locators.searchResultPage.searchResultCards);
+    const searchResultCards = await this.page.locator(searchResultPage.searchResultCards);
     await expect(searchResultCards.first()).toBeVisible();
 
     const ariaLabelValue = await searchResultCards.first().getAttribute('aria-label');
@@ -30,10 +30,10 @@ export class SearchPage extends Base {
   }
 
   async assertNoResults() {
-    const noResultsMessage = this.page.locator(locators.searchResultPage.searchNoResultsMsg);
+    const noResultsMessage = this.page.locator(searchResultPage.searchNoResultsMsg);
     await expect(noResultsMessage).toBeVisible();
 
     const messageText = (await noResultsMessage.textContent())?.trim();
-    await expect(messageText).toMatch(new RegExp(keyWords.searchPage.noResultFrase, 'i'));
+    await expect(messageText).toMatch(new RegExp(textData.searchPage.noResultFrase, 'i'));
   }
 }

@@ -1,10 +1,9 @@
 import { Page, test } from '@playwright/test';
-import { PageFactory } from '../patterns/PageFactory';
-import { ProfilePage } from '../pages/ProfilePage';
-import { BrowserSingleton } from '../patterns/BrowserSingleton';
-import { LoginPage } from '../pages/LoginPage';
+import { ProfilePage, LoginPage } from '../pages';
+import { BrowserSingleton } from '../data/helpers/BrowserSingleton';
 import { loginCredentials } from '../data/creds';
-import { keyWords } from '../data/keywords';
+import { textData } from '../data/textData';
+import { PageFactory } from '../pages/PageFactory';
 
 test.afterAll(async () => {
   const browserSingleton = await BrowserSingleton.getInstance();
@@ -27,14 +26,14 @@ test.describe('Profile Test Suite', () => {
 
     await loginPage.login(loginCredentials.valid.login!, loginCredentials.valid.pass!, true);
 
-    await profilePage.checkProfileDetails();
+    await profilePage.assertProfileDetails();
   });
 
   test('should allow user to edit profile details', async () => {
-    await profilePage.checkEditFirstName(keyWords.profilePage.accountFakeData.firstName);
+    await profilePage.assertEditFirstName(textData.profilePage.accountFakeData.firstName);
   });
 
-  test('should verify that profile changes were saved', async () => {
-    await profilePage.checkFirstNameChange(keyWords.profilePage.accountFakeData.firstName);
+  test('should assert that profile changes were saved', async () => {
+    await profilePage.assertFirstNameChange(textData.profilePage.accountFakeData.firstName);
   });
 });

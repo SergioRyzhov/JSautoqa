@@ -1,8 +1,7 @@
 import { test } from '@playwright/test';
-import { LogoutPage } from '../pages/LogoutPage';
-import { PageFactory } from '../patterns/PageFactory';
-import { LoginPage } from '../pages/LoginPage';
+import { LogoutPage, LoginPage } from '../pages';
 import { loginCredentials } from '../data/creds'
+import { PageFactory } from '../pages/PageFactory';
 
 test.describe('Logout Test', () => {
   test('should successfully logout the user', async ({ page }) => {

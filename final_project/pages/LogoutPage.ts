@@ -1,25 +1,26 @@
-import { expect, Page } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { Base } from './Base';
-import { locators } from '../data/locators';
-import { keyWords } from '../data/keywords';
-import { pageUrls } from '../data/pageurls';
+import { logoutPage } from '../data/locators';
+import { pageEndpoints } from '../data/endpoints';
+import { StateValidator } from '../data/validation/assertions/LoginStateValidator';
 
 export class LogoutPage extends Base {
+  private stateValidator: StateValidator;
+
   constructor(page: Page) {
     super(page);
+    this.stateValidator = new StateValidator(page);
   }
 
   async logout() {
-    await this.navigateToPage(pageUrls.accountPage);
-    const logoutButton = await this.page.locator(locators.logoutPage.logoutButton);
+    await this.navigateToPage(pageEndpoints.accountPage);
+    const logoutButton = await this.page.locator(logoutPage.logoutButton);
     await logoutButton.click();
     await this.page.waitForLoadState('load');
-    await this.isLoggedOut();
+    await this.assertLoggedOut();
   }
 
-  async isLoggedOut() {
-    const title = await this.page.locator(locators.logoutPage.loginHeader);
-    await expect(title).toContainText(keyWords.logoutPage.header);
-    await expect(this.page).toHaveURL(new RegExp(`.*${pageUrls.loginPage}`));
+  async assertLoggedOut() {
+    await this.stateValidator.assertLoggedOut();
   }
 }

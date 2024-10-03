@@ -1,33 +1,27 @@
 import { expect, Page } from '@playwright/test';
 import { Base } from './Base';
-import { locators } from '../data/locators';
-import { pageUrls } from '../data/pageurls';
-import { waitForPageLoadAndElVisible } from '../waiters/waiterBeforeEls';
+import { productPage } from '../data/locators';
+import { pageEndpoints } from '../data/endpoints';
+import { waitForPageLoadAndElVisible } from '../data/waiters/waitBeforeEls';
 
 export class ProductPage extends Base {
   constructor(page: Page) {
     super(page);
   }
 
-  async navigateToWomenDresses() {
-    await this.navigateToPage(pageUrls.productsPage);
-    await expect(this.page).toHaveURL(new RegExp(`.*${pageUrls.productsPage}`));
+  async assertWomenDressesPageLoad() {
+    await this.navigateToPage(pageEndpoints.productsPage);
+    await expect(this.page).toHaveURL(new RegExp(`.*${pageEndpoints.productsPage}`));
   }
 
   async openTheFirstItemOfProducts() {
-    await this.navigateToPage(pageUrls.productsPage);
-    await waitForPageLoadAndElVisible(this.page, locators.productPage.productFirstItem);
-    await this.page.click(locators.productPage.productFirstItem);
+    await this.navigateToPage(pageEndpoints.productsPage);
+    await waitForPageLoadAndElVisible(this.page, productPage.productFirstItem);
+    await this.page.click(productPage.productFirstItem);
   }
 
-  async verifyProductDetails() {
-    const elementsToVerify = [
-      locators.productPage.productTitle,
-      locators.productPage.productPrice,
-      locators.productPage.productDescription
-    ];
-
-    for (const locator of elementsToVerify) {
+  async assertElementsVisibility(elements: string[]) {
+    for (const locator of elements) {
       await expect(this.page.locator(locator)).toBeVisible();
     }
   }

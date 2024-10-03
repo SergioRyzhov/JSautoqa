@@ -1,13 +1,7 @@
 import { Page } from "@playwright/test";
 
-interface WishlistLocators {
-    wishlistPage: {
-        removeButtonsOfProductsInTheWishlist: string;
-    };
-}
-
 /**
- * Removes a product from the wishlist on the page and waits until the product count decreases.
+ * Waits until the product count decreases.
  *
  * This function clicks the first "remove" button in the wishlist and waits for the total number of 
  * "remove" buttons to decrease. It compares the number of products before the removal to ensure
@@ -15,13 +9,12 @@ interface WishlistLocators {
  *
  * @async
  * @param {Page} page - The Playwright `Page` instance representing the browser page.
- * @param {WishlistLocators} locators - An object containing CSS selectors for the wishlist elements.
+ * @param {WishlistLocators} locator - An object containing CSS selectors for the wishlist elements.
  * @param {number} beforeRemoveCount - The number of "remove" buttons/products before the removal.
  * @returns {Promise<void>} Resolves when the product has been successfully removed.
  * @throws Will throw an error if the product count does not decrease or if there is an issue with the locators.
  */
-export async function removeProductFromPage(page: Page, locators: WishlistLocators, beforeRemoveCount: number) {
-    await page.locator(locators.wishlistPage.removeButtonsOfProductsInTheWishlist).first().click();
+export async function waitUntilCountChange(page: Page, locator: string, beforeRemoveCount: number) {
 
     await page.waitForFunction(
         ({ oldCount, wishlistSelector }) => {
@@ -32,6 +25,6 @@ export async function removeProductFromPage(page: Page, locators: WishlistLocato
                 throw error;
             }
         },
-        { oldCount: beforeRemoveCount, wishlistSelector: locators.wishlistPage.removeButtonsOfProductsInTheWishlist }
+        { oldCount: beforeRemoveCount, wishlistSelector: locator }
     );
 }

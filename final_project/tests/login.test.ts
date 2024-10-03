@@ -1,7 +1,7 @@
 import { test } from '@playwright/test';
-import { PageFactory } from '../patterns/PageFactory';
-import { LoginPage } from '../pages/LoginPage';
+import { LoginPage } from '../pages';
 import { loginCredentials } from '../data/creds'
+import { PageFactory } from '../pages/PageFactory';
 
 test.describe('Login Test Suite', () => {
   let loginPage: LoginPage;

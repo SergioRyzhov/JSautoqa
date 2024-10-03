@@ -14,7 +14,7 @@ import { Page } from 'playwright';
  * @returns {Promise<number>} The updated price if it is greater than the old price.
  * @throws Will throw an error if the new price is null or if the price element is not found.
  */
-export async function getUpdatedPrice(page: Page, oldPrice: number, selector: string): Promise<number> {
+export async function waitUpdatedPrice(page: Page, oldPrice: number, selector: string): Promise<number> {
   const newPriceHandle = await page.waitForFunction(
     ({ oldPrice, selector }) => {
       const newPriceElement = document.querySelector(selector);

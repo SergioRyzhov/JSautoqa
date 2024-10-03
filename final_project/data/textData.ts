@@ -1,4 +1,4 @@
-export const keyWords = {
+export const textData = {
     loginPage: {
         header: 'Account',
     },

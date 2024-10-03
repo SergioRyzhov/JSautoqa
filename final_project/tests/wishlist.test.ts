@@ -1,12 +1,9 @@
 import { expect, Page, test } from '@playwright/test';
-import { ProductPage } from '../pages/ProductPage';
-import { WishlistPage } from '../pages/WishlistPage';
-import { PageFactory } from '../patterns/PageFactory';
-import { BrowserSingleton } from '../patterns/BrowserSingleton';
-import { LoginPage } from '../pages/LoginPage';
-import { LogoutPage } from '../pages/LogoutPage';
+import { BrowserSingleton } from '../data/helpers/BrowserSingleton';
+import { LoginPage, LogoutPage, WishlistPage, ProductPage } from '../pages';
 import { loginCredentials } from '../data/creds';
-import { keyWords } from '../data/keywords';
+import { textData } from '../data/textData';
+import { PageFactory } from '../pages/PageFactory';
 
 let page: Page;
 
@@ -17,7 +14,6 @@ test.afterAll(async () => {
 
 test.describe('Wishlist Test Suite as a user', () => {
     let wishlistPage: WishlistPage;
-    let page: Page;
 
     test.beforeEach(async () => {
         const browserSingleton = await BrowserSingleton.getInstance();
@@ -32,24 +28,24 @@ test.describe('Wishlist Test Suite as a user', () => {
 
         await wishlistPage.addTheFirstProductToTheWishlist();
         const countItems = await wishlistPage.getProductsCountFromTheSmallIcon();
-        await expect(countItems).toBeGreaterThan(0);
+        await expect(countItems).toBe(1);
     });
 
     test('should display the added product in the wishlist', async () => {
-        const productsInWishlist = await wishlistPage.isProductsInTheWishlist();
+        const productsInWishlist = await wishlistPage.assertProductsInTheWishlist();
         await expect(productsInWishlist).toBeTruthy();
     });
 
     test('should allow user to remove a product from the wishlist', async () => {
         await wishlistPage.removeProductsFromWishlist();
-        const productsInWishlist = await wishlistPage.isProductsInTheWishlist();
+        const productsInWishlist = await wishlistPage.assertProductsInTheWishlist();
         await expect(productsInWishlist).toBeFalsy();
     });
 
     test('should allow user to add multiple products to the wishlist', async () => {
         await wishlistPage.addProductsToWishlistFast(6);
         const countOfProducts = await wishlistPage.getProductsCountFromTheSmallIcon();
-        await expect(countOfProducts).toBeGreaterThan(3);
+        await expect(countOfProducts).toBe(6);
         await wishlistPage.removeProductsFromWishlist();
     });
 
@@ -58,18 +54,19 @@ test.describe('Wishlist Test Suite as a user', () => {
 
         await wishlistPage.addProductsToWishlistFast(1);
         await productPage.openTheFirstItemOfProducts();
-        await wishlistPage.addChoosenProductToWishlist();
-        await wishlistPage.checkDuplicateErrorMessage();
+        await wishlistPage.addChosenProductToWishlist();
+        const duplicateErrorMessage = await wishlistPage.getDuplicateErrorMessage();
+        await expect(duplicateErrorMessage).toBeVisible();
 
         const countOfProducts = await wishlistPage.getProductsCountFromTheSmallIcon();
-        expect(countOfProducts).toBe(1);
+        await expect(countOfProducts).toBe(1);
     });
 
     test('should display an empty message when wishlist is empty', async () => {
         await wishlistPage.removeProductsFromWishlist();
 
         const emptyMessage = await wishlistPage.getEmptyWishlistMessage();
-        await expect(emptyMessage).toBe(keyWords.wishlistPage.emptyMessage);
+        await expect(emptyMessage).toBe(textData.wishlistPage.emptyMessage);
     });
 
     test('should prompt login when trying to add to wishlist without authentication', async () => {
@@ -79,12 +76,11 @@ test.describe('Wishlist Test Suite as a user', () => {
         await logoutPage.logout();
 
         await productPage.openTheFirstItemOfProducts();
-        await wishlistPage.addChoosenProductToWishlist();
+        await wishlistPage.addChosenProductToWishlist();
 
-        await wishlistPage.checkIfPromptToLoginAppears([
-            keyWords.wishlistPage.loginPromptMessagePart1,
-            keyWords.wishlistPage.loginPromptMessagePart2,
-            keyWords.wishlistPage.loginPromptMessagePart3
-        ]);
+        const loginPrompt = await wishlistPage.assertPromptToLogInAppears();
+        await expect(loginPrompt).toContain(textData.wishlistPage.loginPromptMessagePart1);
+        await expect(loginPrompt).toContain(textData.wishlistPage.loginPromptMessagePart2);
+        await expect(loginPrompt).toContain(textData.wishlistPage.loginPromptMessagePart3);
     });
-})
+});

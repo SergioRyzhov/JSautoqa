@@ -1,22 +1,25 @@
-import { expect, Page } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { Base } from './Base';
-import { locators } from '../data/locators';
-import { pageUrls } from '../data/pageurls';
-import { keyWords } from '../data/keywords';
+import { loginPage } from '../data/locators';
+import { pageEndpoints } from '../data/endpoints';
+import { StateValidator } from '../data/validation/assertions/LoginStateValidator';
 
 export class LoginPage extends Base {
+  private stateValidator: StateValidator;
+
   constructor(page: Page) {
     super(page);
+    this.stateValidator = new StateValidator(page);
   }
 
   async login(email: string, password: string, expectSuccess: boolean = true) {
-    await this.navigateToPage(pageUrls.loginPage);
+    await this.navigateToPage(pageEndpoints.loginPage);
 
-    await this.page.locator(locators.loginPage.emailInput).waitFor();
-    await this.page.locator(locators.loginPage.passwordInput).waitFor();
-    await this.page.fill(locators.loginPage.emailInput, email);
-    await this.page.fill(locators.loginPage.passwordInput, password);
-    await this.page.click(locators.loginPage.submitButton);
+    await this.page.locator(loginPage.emailInput).waitFor();
+    await this.page.locator(loginPage.passwordInput).waitFor();
+    await this.page.fill(loginPage.emailInput, email);
+    await this.page.fill(loginPage.passwordInput, password);
+    await this.page.click(loginPage.submitButton);
 
     if (expectSuccess) {
       await this.assertLoginSuccess();
@@ -26,15 +29,10 @@ export class LoginPage extends Base {
   }
 
   async assertLoginSuccess() {
-    const accountTitle = await this.page.locator(locators.loginPage.accountTitle);
-    await accountTitle.waitFor();
-    await expect(accountTitle).toContainText(keyWords.loginPage.header);
-    await expect(this.page).toHaveURL(new RegExp(`.*${pageUrls.accountPage}`));
+    await this.stateValidator.assertLoginSuccess();
   }
 
   async assertLoginFailure() {
-    const errorMessage = await this.page.locator(locators.loginPage.errorMessage);
-    await errorMessage.waitFor();
-    await expect(errorMessage).toBeVisible();
+    await this.stateValidator.assertLoginFailure();
   }
 }

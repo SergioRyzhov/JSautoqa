@@ -1,4 +1,4 @@
-export const pageUrls = {
+export const pageEndpoints = {
     homePage: '/',
     loginPage: '/login',
     accountPage: '/myaccount',

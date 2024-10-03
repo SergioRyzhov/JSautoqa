@@ -1,4 +1,4 @@
-import { PlaywrightTestConfig, devices } from '@playwright/test';
+import { PlaywrightTestConfig } from '@playwright/test';
 import dotenv from 'dotenv';
 import path from 'path';
 
@@ -15,7 +15,6 @@ const config: PlaywrightTestConfig = {
   expect: {
     timeout: 60000,
   },
-  // fullyParallel: true,
   use: {
     viewport: { width: 1280, height: 900 },
     baseURL: process.env.BASE_URL,

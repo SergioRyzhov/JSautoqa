@@ -1,5 +1,5 @@
 import { BrowserContext, Page } from '@playwright/test';
-import { locators } from '../data/locators';
+import { basePage } from '../data/locators';
 
 export class Base {
   protected page: Page;
@@ -15,17 +15,17 @@ export class Base {
 
   async closeCookiePopup() {
     try {
-      const acceptCookieMainWindow = this.page.locator(locators.basePage.acceptCookieMainWindow);
+      const acceptCookieMainWindow = this.page.locator(basePage.acceptCookieMainWindow);
 
       if (await acceptCookieMainWindow.isVisible()) {
-        await this.page.locator(locators.basePage.acceptCookieButton).click();
+        await this.page.locator(basePage.acceptCookieButton).click();
       }
     } catch (error) { }
   }
 
   async handleCaptcha() {
     try {
-      const captchaLocator = this.page.locator(locators.basePage.captchaFrameSelector);
+      const captchaLocator = this.page.locator(basePage.captchaFrameSelector);
       const captchaExists = await captchaLocator.first().isVisible();
 
       if (captchaExists) {
@@ -33,6 +33,10 @@ export class Base {
       }
     } catch (error) {
     }
+  }
+
+  async refreshThePage() {
+    await this.page.reload({ waitUntil: 'load' });
   }
 
   async navigateToPage(url: string) {
