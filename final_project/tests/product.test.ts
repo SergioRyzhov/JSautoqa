@@ -20,7 +20,7 @@ test.describe('Product Browsing Test Suite', () => {
     const elementsToAssert = [
       productPageLoactor.productTitle,
       productPageLoactor.productPrice,
-      productPageLoactor.productDescription
+      productPageLoactor.productDescription,
     ];
     await productPage.assertElementsVisibility(elementsToAssert);
   });

@@ -10,7 +10,10 @@ import { CartValidator } from '../data/validation/assertions/CartValidator';
 import { PageFactory } from './PageFactory';
 
 export class CartPage extends Base {
-  private productPage = PageFactory.getPage(this.page, 'ProductPage') as ProductPage;
+  private productPage = PageFactory.getPage(
+    this.page,
+    'ProductPage'
+  ) as ProductPage;
   private validator: CartValidator;
 
   constructor(page: Page) {
@@ -28,24 +31,33 @@ export class CartPage extends Base {
     await this.navigateToPage(pageEndpoints.cartPage);
   }
 
-
-  async calculateUpdatedTotalPriceInCart(quantityOfProducts: number): Promise<{ oldPrice: number; newPrice: number }> {
+  async calculateUpdatedTotalPriceInCart(
+    quantityOfProducts: number
+  ): Promise<{ oldPrice: number; newPrice: number }> {
     await this.navigateToPage(pageEndpoints.cartPage);
     const oldPrice = await this.getCurrentTotalPriceInTheCart();
     await this.updateProductQuantity(quantityOfProducts);
-    const newPrice = await waitUpdatedPrice(this.page, oldPrice, cartPage.cartTotalPrice);
+    const newPrice = await waitUpdatedPrice(
+      this.page,
+      oldPrice,
+      cartPage.cartTotalPrice
+    );
     return { oldPrice, newPrice };
-}
+  }
 
   async getCurrentTotalPriceInTheCart(): Promise<number> {
-    const price = await this.page.locator(cartPage.cartTotalPrice).textContent();
+    const price = await this.page
+      .locator(cartPage.cartTotalPrice)
+      .textContent();
     const cleanedPrice = getCleanPrice(price ?? '');
     return cleanedPrice;
   }
 
   async updateProductQuantity(quantityOfProducts: number) {
     await this.page.locator(cartPage.cartProductEditButton).click();
-    await this.page.selectOption(cartPage.cartProductQtySelector, { index: quantityOfProducts - 1 });
+    await this.page.selectOption(cartPage.cartProductQtySelector, {
+      index: quantityOfProducts - 1,
+    });
     await this.page.locator(cartPage.cartProductUpdateButton).click();
   }
 
@@ -56,7 +68,9 @@ export class CartPage extends Base {
   }
 
   async removeProductFromTheCart() {
-    const removeButton = this.page.locator(cartPage.rmProductFromTheCartButton).first();
+    const removeButton = this.page
+      .locator(cartPage.rmProductFromTheCartButton)
+      .first();
     await removeButton.click();
     await this.page.waitForLoadState('load');
   }

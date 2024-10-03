@@ -6,6 +6,6 @@
  */
 
 export function cleanQuantity(text: string): number {
-    if (!text) return 0;
-    return parseInt(text.replace(/\D/g, ''), 10);
+  if (!text) return 0;
+  return parseInt(text.replace(/\D/g, ''), 10);
 }

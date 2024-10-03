@@ -4,4 +4,4 @@ export const loginPage = {
   submitButton: 'button[data-tau="login_submit"]',
   accountTitle: 'h1.b-page_title',
   errorMessage: 'div[data-tau="login_error_message"]',
-}
+};

@@ -15,12 +15,14 @@ export class Base {
 
   async closeCookiePopup() {
     try {
-      const acceptCookieMainWindow = this.page.locator(basePage.acceptCookieMainWindow);
+      const acceptCookieMainWindow = this.page.locator(
+        basePage.acceptCookieMainWindow
+      );
 
       if (await acceptCookieMainWindow.isVisible()) {
         await this.page.locator(basePage.acceptCookieButton).click();
       }
-    } catch (error) { }
+    } catch (error) {}
   }
 
   async handleCaptcha() {
@@ -31,8 +33,7 @@ export class Base {
       if (captchaExists) {
         await this.page.pause();
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   }
 
   async refreshThePage() {

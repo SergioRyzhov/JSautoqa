@@ -35,7 +35,8 @@ test.describe('Cart Test Suite as a guest', () => {
   });
 
   test('should correctly add total price in the cart', async () => {
-    const { oldPrice, newPrice } = await cartPage.calculateUpdatedTotalPriceInCart(3);
+    const { oldPrice, newPrice } =
+      await cartPage.calculateUpdatedTotalPriceInCart(3);
     await expect(newPrice).toBeGreaterThan(oldPrice);
   });
 

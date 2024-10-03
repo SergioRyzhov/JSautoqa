@@ -11,7 +11,9 @@ export class ProductPage extends Base {
 
   async assertWomenDressesPageLoad() {
     await this.navigateToPage(pageEndpoints.productsPage);
-    await expect(this.page).toHaveURL(new RegExp(`.*${pageEndpoints.productsPage}`));
+    await expect(this.page).toHaveURL(
+      new RegExp(`.*${pageEndpoints.productsPage}`)
+    );
   }
 
   async openTheFirstItemOfProducts() {

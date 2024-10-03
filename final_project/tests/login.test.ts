@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
 import { LoginPage } from '../pages';
-import { loginCredentials } from '../data/creds'
+import { loginCredentials } from '../data/creds';
 import { PageFactory } from '../pages/PageFactory';
 
 test.describe('Login Test Suite', () => {
@@ -11,10 +11,18 @@ test.describe('Login Test Suite', () => {
   });
 
   test('should successfully login with valid credentials', async () => {
-    await loginPage.login(loginCredentials.valid.login!, loginCredentials.valid.pass!, true);
+    await loginPage.login(
+      loginCredentials.valid.login!,
+      loginCredentials.valid.pass!,
+      true
+    );
   });
 
   test('should fail to login with invalid credentials', async () => {
-    await loginPage.login(loginCredentials.invalid.login, loginCredentials.invalid.pass, false);
+    await loginPage.login(
+      loginCredentials.invalid.login,
+      loginCredentials.invalid.pass,
+      false
+    );
   });
 });

@@ -6,7 +6,7 @@ import { Page } from 'playwright';
  * This function continuously checks the element containing the price until the new price is greater
  * than the old price. It cleans the price value by removing any non-numeric characters and
  * compares it to the provided old price. If the new price is greater, it returns the updated price.
- * 
+ *
  * @async
  * @param {Page} page - The Playwright `Page` instance representing the browser page.
  * @param {number} oldPrice - The previous price to compare against the new price.
@@ -14,7 +14,11 @@ import { Page } from 'playwright';
  * @returns {Promise<number>} The updated price if it is greater than the old price.
  * @throws Will throw an error if the new price is null or if the price element is not found.
  */
-export async function waitUpdatedPrice(page: Page, oldPrice: number, selector: string): Promise<number> {
+export async function waitUpdatedPrice(
+  page: Page,
+  oldPrice: number,
+  selector: string
+): Promise<number> {
   const newPriceHandle = await page.waitForFunction(
     ({ oldPrice, selector }) => {
       const newPriceElement = document.querySelector(selector);
@@ -25,7 +29,7 @@ export async function waitUpdatedPrice(page: Page, oldPrice: number, selector: s
 
       return cleanedNewPrice > oldPrice ? cleanedNewPrice : null;
     },
-    { oldPrice, selector },
+    { oldPrice, selector }
   );
 
   const newPrice = await newPriceHandle.jsonValue();
