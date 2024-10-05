@@ -1,0 +1,263 @@
+[
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "user-authentication;user-login",
+        "keyword": "Scenario",
+        "line": 3,
+        "name": "User Login",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 510244
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "I am on the https://studio.cucumber.io/users/sign_in page",
+            "match": {
+              "location": "features/step-definitions/steps.ts:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 833382838
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 5,
+            "name": "I input valid username \"<USERNAME>\" in input \"Username Input\" and password \"<PASSWORD>\" in input \"Password Input\"",
+            "match": {
+              "location": "features/step-definitions/steps.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 287407562
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 6,
+            "name": "I click on \"Submit Button\" button",
+            "match": {
+              "location": "features/step-definitions/steps.ts:36"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1963964031
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 7,
+            "name": "I should be redirected to the url contains \"/projects\"",
+            "match": {
+              "location": "features/step-definitions/steps.ts:41"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 33905787
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 8,
+            "name": "I should see an element \"Left Nav Menu\"",
+            "match": {
+              "location": "features/step-definitions/steps.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1059536296
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 712280
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "user-authentication;open-user-profile",
+        "keyword": "Scenario",
+        "line": 10,
+        "name": "Open User Profile",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 323343
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 11,
+            "name": "I click on \"User Preferences Button\" button",
+            "match": {
+              "location": "features/step-definitions/steps.ts:36"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 147778117
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 12,
+            "name": "I click on \"Profile Button\" button",
+            "match": {
+              "location": "features/step-definitions/steps.ts:36"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 168811380
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 13,
+            "name": "I should be redirected to the url contains \"/profile\"",
+            "match": {
+              "location": "features/step-definitions/steps.ts:41"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 14734746
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "I should see an element \"Profile Header\"",
+            "match": {
+              "location": "features/step-definitions/steps.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 20905283
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 77024
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "user-authentication;user-logout",
+        "keyword": "Scenario",
+        "line": 16,
+        "name": "User Logout",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 148226
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 17,
+            "name": "I click on \"User Preferences Button\" button",
+            "match": {
+              "location": "features/step-definitions/steps.ts:36"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 60683925
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "I click on \"Sign Out Button\" button",
+            "match": {
+              "location": "features/step-definitions/steps.ts:36"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 63549012
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 19,
+            "name": "I should be redirected to the url contains \"/sign_in\"",
+            "match": {
+              "location": "features/step-definitions/steps.ts:41"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 516311761
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 20,
+            "name": "I should see an element \"Sign In Button\"",
+            "match": {
+              "location": "features/step-definitions/steps.ts:45"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 22653182
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 234585
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "user-authentication",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "User Authentication",
+    "tags": [],
+    "uri": "test/specs/user-auth.feature"
+  }
+]

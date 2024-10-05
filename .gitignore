@@ -11,3 +11,7 @@ allure-report/
 playwright-report/
 reports/
 **/.env
+screenshots/
+.env
+cypress.env.json
+*.png
