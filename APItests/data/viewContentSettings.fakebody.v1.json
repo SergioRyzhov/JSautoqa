@@ -1,0 +1,17 @@
+{
+    "data": [
+        {
+            "event_name": "ViewContent",
+            "pid": "HZZ05716",
+            "referer": "https://www.boohoo.com/search?q=dress",
+            "url": "https://www.boohoo.com/on/demandware.store/Sites-boohoo-UK-Site/en_GB/Product-Show?pid=HZZ05716",
+            "processor": "Tiktok"
+        },
+        {
+            "event_name": "ViewContent",
+            "pid": "HZZ05716",
+            "processor": "Meta"
+        }
+    ],
+    "eventId": "yMVHTqZEVl8NzkK_k4LgmTfF5QWGiPTuMfc=_1727680574275"
+}
